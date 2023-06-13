@@ -1,0 +1,111 @@
+
+
+model {
+
+  # Likelihood
+
+  for(i in 1:n){
+
+    # Biomass values lognormally distrubuted around a Monod function
+    BIOMASS[i] ~ dlnorm(log(mean[i]), tau_log_bio[MONO_for_SD[i]])
+    mean[i] <- a[SITE[i]] * AGE[i] / (b[SITE[i]] + AGE[i])
+
+  }
+
+  for(i in 1:n_site){
+    a[i] <- exp(beta_a_0 + beta_a_c1 * c1[i] +  beta_a_c2 * c2[i] +  beta_a_c3 * c3[i] +  beta_a_c4 * c4[i] + beta_a_mono * MONO[i] + beta_a_mono_intx_c1 * MONO[i] * c1[i] +
+
+      rand_a_s[SITE[i]])
+
+    b[i] <- exp(beta_b_0 + beta_b_c1 * c1[i] +  beta_b_c2 * c2[i] +  beta_b_c3 * c3[i] +  beta_b_c4 * c4[i] + beta_b_mono * MONO[i] + beta_b_mono_intx_c1 * MONO[i] * c1[i] +
+
+      rand_b_s[SITE[i]])
+
+  }
+
+
+  # Priors
+
+  beta_a_0 ~ dnorm(5, 0.1) # Roughly reasonable max carbon estimates
+
+  beta_a_c1 ~ dnorm(0, 0.1)
+  beta_a_c2 ~ dnorm(0, 0.1)
+  beta_a_c3 ~ dnorm(0, 0.1)
+  beta_a_c4 ~ dnorm(0, 0.1)
+
+  beta_a_mono ~ dnorm(0, 0.1)
+  beta_a_mono_intx_c1 ~ dnorm(0, 0.1)
+
+  beta_b_0 ~ dnorm(3, 0.1) # Using reasonable times to half saturation
+
+  beta_b_c1 ~ dnorm(0, 0.1)
+  beta_b_c2 ~ dnorm(0, 0.1)
+  beta_b_c3 ~ dnorm(0, 0.1)
+  beta_b_c4 ~ dnorm(0, 0.1)
+
+  beta_b_mono ~ dnorm(0, 0.1)
+  beta_b_mono_intx_c1 ~ dnorm(0, 0.1)
+
+
+
+  # Random effect for prior use, with sum to zero constraints
+  for(i in 1:(n_site-1)){
+    rand_a_s[i] ~ dnorm(0, tau_a_s)
+    rand_b_s[i] ~ dnorm(0, tau_b_s)
+  }
+  rand_a_s[n_site] <- -sum(rand_a_s[1:(n_site-1)])
+  rand_b_s[n_site] <- -sum(rand_b_s[1:(n_site-1)])
+
+  tau_a_s <- pow(sig_a_s, -2)
+  sig_a_s ~ dunif(0,10)
+  tau_b_s <- pow(sig_b_s, -2)
+  sig_b_s ~ dunif(0,10)
+
+  for(i in 1:2){
+    tau_log_bio[i] <- pow(sig_log_bio[i], -2)
+    sig_log_bio[i] ~ dunif(0, 10)
+  }
+
+
+
+  # Derived quantities
+
+  for(j in 1:2){ # Levels of dispersal to test
+    for(k in 1:2){ # Levels of monculture/non-monoculture
+
+      # Note that we are setting all values for other predictor variables to the
+      # mean value (because centered and scaled, this is zero)
+
+      aa[j,k] <- exp(beta_a_0 +  beta_a_c1 * pred_disp_levels[j] + beta_a_mono * pred_mono_levels[k] + beta_a_mono_intx_c1 * pred_mono_levels[k] * pred_disp_levels[j])
+
+      bb[j,k] <- exp(beta_b_0 +  beta_b_c1 * pred_disp_levels[j] + beta_b_mono * pred_mono_levels[k] + beta_b_mono_intx_c1 * pred_mono_levels[k] * pred_disp_levels[j])
+
+      for(t in 1:n_pred_ages){
+        pred_mean[j,k,t] <- aa[j,k] * pred_ages[t] / (bb[j,k] + pred_ages[t])
+
+        pred_biomass[j,k,t] ~ dlnorm(log(pred_mean[j,k,t]), tau_log_bio[k])
+
+      }
+    }
+  }
+
+  # Estimates at 30 years of growth
+  for(j in 1:n_pred_disp_values){ # Values of dispersal to test
+    for(k in 1:2){ # Levels of monculture/non-monoculture
+
+      # Note that we are setting all values for other predictor variables to the
+      # mean value (because centered and scaled, this is zero)
+
+      aa30[j,k] <- exp(beta_a_0 +  beta_a_c1 * pred_disp_values[j] + beta_a_mono * pred_mono_levels[k] + beta_a_mono_intx_c1 * pred_mono_levels[k] * pred_disp_values[j])
+
+      bb30[j,k] <- exp(beta_b_0 +  beta_b_c1 * pred_disp_values[j] + beta_b_mono * pred_mono_levels[k] + beta_b_mono_intx_c1 * pred_mono_levels[k] * pred_disp_values[j])
+
+      pred_mean30[j,k] <- aa30[j,k] * 30 / (bb30[j,k] + 30) # Monod
+
+    }
+  }
+
+
+} # End of model
+
+
