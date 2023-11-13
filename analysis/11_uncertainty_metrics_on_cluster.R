@@ -1,5 +1,5 @@
-# Choose the working directory to put all these scipts. Will just put these in
-# a temp location because I'll upload them to our slurm cluster
+# Choose the working directory to put all these scripts. Will just put these in
+# a temp location because I'll upload them for execution on our slurm cluster
 
 setwd("~/Downloads/")
 

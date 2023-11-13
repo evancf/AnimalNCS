@@ -4,6 +4,8 @@ library("stars")
 # Set up working directories
 topwd <- getwd()
 
+# This code was executed on a compute cluster. Note that users will need to
+# modify the following working directories accordingly.
 data_wd <- "/nobackup1/efricke/VertNBS_data"
 outputs_wd <- "/nobackup1/efricke/VertNBS_data"
 raster_wd <- "/nobackup1/efricke/VertNBS_data"
@@ -54,7 +56,7 @@ disp_nat <- 0.58
 
 # Develop predictions for the ~2000 scenario -----------------------------------
 
-# Predict forest growth up to 30 years by multipling all these
+# Predict forest growth up to 30 years by multiplying all these
 # rasters by their coefficients
 
 # Remember this is how the variables/coefficients are named

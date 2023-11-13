@@ -4,10 +4,10 @@
 # in a memmory efficient way, so this breaks it up into chunks.
 
 # This script that makes a bunch of individual scripts that can be run on
-# a cluster because this is really memory/time intenstive. This is a little
+# a cluster because this is really memory/time intensive. This is a little
 # clunky and I'm sure there's a more straightforward way to run this in parallel
 
-# Choose the working directory to put all these scipts. Will just put these in
+# Choose the working directory to put all these scripts. Will just put these in
 # a temp location because I'll upload them to our slurm cluster
 
 setwd("~/Downloads/")

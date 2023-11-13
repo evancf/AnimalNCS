@@ -12,7 +12,7 @@ coord_covars <- read.csv(file = "./data/coord_covars.csv", row.names = 1)
 # Load mammal and bird presence by site data -----------------------------------
 
 # Note that this code depends on an updated run of the code in
-# "get_species_presence_by_sitecoords.R", which takes hours to run and
+# "03_get_species_presence_by_sitecoords.R", which takes hours to run and
 # depends on you having IUCN Red List / BirdLife International range
 # maps downloaded.
 

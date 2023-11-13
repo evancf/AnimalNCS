@@ -4,10 +4,13 @@
 # Toward the bottom are some other rasters that can be
 # downloaded directly from the linked URLs
 
+# Load a couple functions
+source(list.files("./R", full.names = T))
+
 topwd <- getwd()
 
-library("tidyverse")
-library("rgee")
+ipak(c("tidyverse","rgee"))
+# See README notes about Google Earth Engine
 ee_Initialize(gcs = T, drive = T)
 
 
@@ -19,7 +22,7 @@ merge_project_gee_rasters <- function(x){
 
   y <- terra::merge(terra::rast(x[1]),
                     terra::rast(x[2])) %>%
-    terra::project(di_terra)
+    terra::project(dd_terra)
   terra::writeRaster(y,
                      filename,
                      overwrite = T)
@@ -29,9 +32,9 @@ merge_project_gee_rasters <- function(x){
 }
 
 
-# Will use this as the template
+# Will use this as the template raster for the other raster data that is downloaded
 setwd(topwd)
-di_terra <- terra::rast("./data/spatial data/raster_outputs/dispersal_integrity2000.tif")
+dd_terra <- terra::rast("./data/spatial data/raster_outputs/dispersal_disruption2020.tif")
 
 
 # Want to work in this via_gee folder
@@ -156,87 +159,6 @@ if(!"npp_max.tif" %in% list.files()){
 
 
 
-# Elevation raster -------------------------------------------------------------
-setwd(topwd)
-setwd("./data/spatial data/raster/via_gee/")
-if(!"elevation.tif" %in% list.files()){
-  elevation_raster <- ee$
-    Image("CGIAR/SRTM90_V4")$select("elevation")$
-    reduceResolution(
-      reducer = ee$Reducer$mean(),
-      maxPixels = 2000) %>%
-    ee_as_raster(
-      scale = 1000,
-      via = "drive",
-      dsn = "elevation.tif")
-  # Now save a projected file
-  merge_project_gee_rasters(elevation_raster)
-}
-
-# # Not sure if this will be helpful at some point...
-# # GFCC 2010 -------------------------------------------------------------
-# setwd(topwd)
-# setwd("./data/spatial data/raster/via_gee/")
-# if(!"gfcc2010.tif" %in% list.files()){
-#   gfcc2010_raster <- ee$
-#     ImageCollection("NASA/MEASURES/GFCC/TC/v3")$select("tree_canopy_cover")$
-#     filterDate("2010-01-01", "2010-12-31")$
-#     mosaic() %>%
-#     ee_as_raster(
-#       scale = 1000,
-#       via = "drive",
-#       dsn = "gfcc2010.tif")
-#   # Now save a projected file
-#   gfcc2010 <- terra::rast("gfcc2010.tif") %>%
-#     terra::project(di_terra)
-#   terra::writeRaster(gfcc2010,
-#                      "gfcc2010.tif",
-#                      overwrite = T)
-# }
-
-# Cropland -------------------------------------------
-setwd(topwd)
-setwd("./data/spatial data/raster/via_gee/")
-if(!"cropland2015.tif" %in% list.files()){
-  cropland2015_raster <- ee$
-    ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global")$
-    select("crops-coverfraction")$
-    filterDate("2015-01-01", "2015-12-31")$
-    mosaic() %>%
-    ee_as_raster(
-      scale = 1000,
-      via = "drive",
-      dsn = "cropland2015.tif")
-    # Now save a projected file
-  cropland2015 <- terra::rast("cropland2015.tif") %>%
-    terra::project(di_terra)
-  terra::writeRaster(cropland2015,
-                     "cropland2015.tif",
-                     overwrite = T)
-}
-
-# Urban -------------------------------------------
-setwd(topwd)
-setwd("./data/spatial data/raster/via_gee/")
-if(!"urban2015.tif" %in% list.files()){
-  urban2015_raster <- ee$
-    ImageCollection("COPERNICUS/Landcover/100m/Proba-V-C3/Global")$
-    select("urban-coverfraction")$
-    filterDate("2015-01-01", "2015-12-31")$
-    mosaic() %>%
-    ee_as_raster(
-      scale = 1000,
-      via = "drive",
-      dsn = "urban2015.tif")
-  # Now save a projected file
-  urban2015 <- terra::rast("urban2015.tif") %>%
-    terra::project(di_terra)
-  terra::writeRaster(urban2015,
-                     "urban2015.tif",
-                     overwrite = T)
-}
-
-
 
 # Will also get some other rasters set up --------------------------------------
 
@@ -246,7 +168,7 @@ setwd(topwd)
 setwd("./data/spatial data/raster/")
 if(!"ncs_restore_sites.tif" %in% list.files()){
   ncs_restore_sites <- terra::rast("./NCS_Refor11_map/NCS_Refor11_map.tif") %>%
-    terra::project(di_terra)
+    terra::project(dd_terra)
   terra::writeRaster(ncs_restore_sites,
                      "ncs_restore_sites.tif",
                      overwrite = T)
@@ -259,24 +181,12 @@ setwd(topwd)
 setwd("./data/spatial data/raster/")
 if(!"fp.tif" %in% list.files()){
   fp <- terra::rast("./HFP2009.tif") %>%
-    terra::project(di_terra)
+    terra::project(dd_terra)
   terra::writeRaster(fp,
                      "fp.tif",
                      overwrite = T)
   rm(fp)
 }
-
-
-# Forest age
-setwd(topwd)
-setwd("./data/spatial data/raster/")
-forest_age_filename <- "2023214204513222_BGIForestAgeMPIBGC1.0.0.nc"
-forest_age <- terra::rast(forest_age_filename,
-                          lyrs = "ForestAge_TC030") %>%
-  terra::project(di_terra)
-terra::writeRaster(forest_age,
-                   "forest_age.tif",
-                   overwrite = T)
 
 
 
@@ -285,7 +195,10 @@ terra::writeRaster(forest_age,
 # Because we'll need to use the raster package, we will
 # get a different template
 setwd(topwd)
-dispersal_integrity <- raster::raster("./data/spatial data/raster_outputs/dispersal_integrity.tif")
+dd_raster <- raster::raster("./data/spatial data/raster_outputs/dispersal_disruption2020.tif")
+
+# Ecoregions dataset available via this link: https://storage.googleapis.com/teow2016/Ecoregions2017.zip
+# Also see the "About" tab here: https://ecoregions.appspot.com/
 
 setwd("./data/spatial data/vector/")
 library("sf")
@@ -317,14 +230,14 @@ setwd("./data/spatial data/raster/")
 if(!"for_and_sav_biomes.tif" %in% list.files()){
   library("fasterize")
   for_and_sav_biomes <- fasterize(sf = ecoreg,
-                                  raster = dispersal_integrity,
+                                  raster = dd_raster,
                                   field = "for_and_sav")
   raster::writeRaster(for_and_sav_biomes,
                       filename = "for_and_sav_biomes.tif",
                       overwrite = T)
   # Will need to project this to match the proj crs
   for_and_sav_biomes <- terra::rast("for_and_sav_biomes.tif") %>%
-    terra::project(di_terra, method = "near")
+    terra::project(dd_terra, method = "near")
   terra::writeRaster(for_and_sav_biomes,
                      "for_and_sav_biomes.tif",
                      overwrite = T)
@@ -336,14 +249,14 @@ setwd("./data/spatial data/raster/")
 if(!"trop_for_and_sav_biomes.tif" %in% list.files()){
   library("fasterize")
   trop_for_biomes <- fasterize(sf = ecoreg,
-                               raster = dispersal_integrity,
+                               raster = dd_raster,
                                field = "trop_for")
   raster::writeRaster(trop_for_biomes,
                       filename = "trop_for_biomes.tif",
                       overwrite = T)
   # Will need to project this to match the proj crs
   trop_for_biomes <- terra::rast("trop_for_biomes.tif") %>%
-    terra::project(di_terra, method = "near")
+    terra::project(dd_terra, method = "near")
   terra::writeRaster(trop_for_biomes,
                      "trop_for_biomes.tif",
                      overwrite = T)
@@ -354,14 +267,14 @@ setwd("./data/spatial data/raster/")
 if(!"trop_for_and_sav_biomes.tif" %in% list.files()){
   library("fasterize")
   trop_for_and_sav_biomes <- fasterize(sf = ecoreg,
-                                       raster = dispersal_integrity,
+                                       raster = dd_raster,
                                        field = "trop_for_and_sav")
   raster::writeRaster(trop_for_and_sav_biomes,
                       filename = "trop_for_and_sav_biomes.tif",
                       overwrite = T)
   # Will need to project this to match the proj crs
   trop_for_and_sav_biomes <- terra::rast("trop_for_and_sav_biomes.tif") %>%
-    terra::project(di_terra, method = "near")
+    terra::project(dd_terra, method = "near")
   terra::writeRaster(trop_for_and_sav_biomes,
                      "trop_for_and_sav_biomes.tif",
                      overwrite = T)

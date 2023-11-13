@@ -18,7 +18,7 @@ ipak(c("tidyverse",
 
 
 
-# Get some info about sensors from the API
+# Get some info about sensors from the API. Users will have to fill this in.
 opts <- curlOptions(userpwd = "FILLIN")
 
 sensor_ids <- getURL("https://www.movebank.org/movebank/service/direct-read?entity_type=tag_type",
@@ -79,7 +79,7 @@ for(file in movebank_files){
     filter(!grepl("calibration", individual.local.identifier))
 
 
-  # Some files we just want to skip
+  # Some files we just want to skip due to various issues with the data.
 
   if(file %in% c("./data/Movebank raw/Feral cats and fenced reserves.csv",
                  "./data/Movebank raw/GPS calibration data (global).csv",

@@ -1,5 +1,5 @@
-# You need to run 04_displacement_bayes_model.R to the end with the terr_mod stuff
-# as well as the 20_fragmentation_effect.R code
+# You need to run 04_displacement_bayes_model.R as well as the
+# 20_fragmentation_effect.R script to produce the figures.
 
 pres_dat <- sjPlot::get_model_data(tc_mod, type = "pred",
                                    terms="treecover2000 [all]")

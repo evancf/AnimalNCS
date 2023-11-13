@@ -12,6 +12,7 @@ g_biomass <- read.csv("https://raw.githubusercontent.com/forc-db/GROA/master/dat
 
 
 # Pull GPFC dataset
+# These data are available here: https://zenodo.org/records/6555216
 pl_sites <- readxl::read_excel("./data/GPFC_database.xlsx", sheet = 2)
 pl_biomass <- readxl::read_excel("./data/GPFC_database.xlsx", sheet = 3)
 
@@ -40,7 +41,7 @@ pl_sites <- pl_sites %>%
          site_country = country,
          site_state = state)
 
-# Age and carbon
+# Reconcile column names
 pl_biomass <- pl_biomass %>%
   rename(mean_ha = agc,
          stand_age = age)
@@ -126,7 +127,7 @@ coord_dat[1,]
 
 
 # Get the ecoregions and realms
-# Available here: https://ecoregions.appspot.com/
+# See details in 01_spatial_data_from_gee.R
 ecoreg <- read_sf("./data/spatial data/vector/Ecoregions2017/Ecoregions2017.shp")
 sf_use_s2(FALSE)
 ecoreg_dat <- coord_dat %>%

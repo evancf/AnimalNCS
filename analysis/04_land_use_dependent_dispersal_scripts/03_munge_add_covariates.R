@@ -47,12 +47,15 @@ move_df %>% filter(individual.taxon.canonical.name %in% bad_spp) %>%
 # Adding in covariates ---------------------------------------------------------
 
 # Traits
+# Uncomment and run the following two lines if the traitdata package is not already installed
+# if(!"remotes" %in% installed.packages()[,"Package"]) install.packages("remotes")
+# remotes::install_github("RS-eco/traitdata", build_vignettes = T, force=T)
 
 etb <- traitdata::elton_birds
 etm <- traitdata::elton_mammals
 
 # Fix up a couple things with these..
-library(taxizedb)
+ipak("taxizedb")
 
 if(!"etm_orders.csv" %in% list.files("./data/land_use_dependent_dispersal_data/")){
   etm_orders <- taxize::tax_name(unique(etm$Family), get = "Order", db = "itis")

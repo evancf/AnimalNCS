@@ -1,5 +1,6 @@
-library("tidyverse")
-library("stars")
+source(list.files("./R", full.names = T))
+
+ipak(c("tidyverse", "stars"))
 
 # Set up working directories
 top_wd <- getwd()
@@ -586,17 +587,21 @@ ncs_potential_pg <- ncs_potential %>%
 
 setwd(top_wd)
 png(file = "./outputs/figures/ncs summary.png",
-    width = 4.76,
-    height = 5,
-    units = "in", res = 440)
-par(mar = c(5.1, 9.2, 5.1, 1.1))
+    width = 180,
+    height = 80,
+    units = "mm", res = 440)
+par(mar = c(4.1, 13, 4.1, 3.5))
 
-cex_units <- 0.8
+yy1 <- 0.55
+yy2 <- 2
+yy3 <- 3.95
+
+cex_units <- 0.9
 cex_ncs <- 0.9
 
 y_lab_diff <- 0.05
 lwd_bar <- 20
-lwd_ci <- lwd_bar / 8
+lwd_ci <- lwd_bar / 10
 col_ci <- "grey20"
   col_bar <- "grey70"
 
@@ -610,36 +615,31 @@ col_ci <- "grey20"
        frame = F,
        xaxt = "n",
        yaxt = "n")
-  #axis(3, at = c(0, 0.6, 1.2))
   axis(3, at = c(0, 0.5, 1, 1.5, 2),
-       labels = c(0, 0.5, 1, 1.5, 2))
-  axis(3, at = c(0, 2, 4, 6, 8) / 3.67,
-       labels = c(0, 2, 4, 6, 8),
-       xpd = T,
-       mgp = c(3, -1.75, 0),
-       tck = 0.05)
-  text(0, 4.52 - 5.5, "PgC / yr", pos = 2, xpd = T, cex = cex_units)
-  text(0, 5.55 - 5.5, bquote("Gt"*CO[2]*"e / yr"), pos = 2, xpd = T, cex = cex_units)
-  mtext("Climate mitigation potential\nin potential tropical restoration areas",
+       labels = c(0, 0.5, 1, 1.5, 2),
+       mgp = c(3, 0.7, 0))
+
+  text(0, -1.28, "PgC / yr", pos = 2, xpd = T, cex = cex_units)
+  mtext("Climate mitigation potential in potential tropical restoration areas",
         side = 3,
-        line = 3,
+        line = 2.5,
         font = 2)
 
-  text("Current natural\nregrowth potential",
+  text("Current natural regrowth potential",
        x = 0,
-       y = 1 + y_lab_diff,
+       y = yy1 + y_lab_diff,
        pos = 2,
        xpd = T,
        cex = cex_ncs)
 
-  segments(y0 = 1,
+  segments(y0 = yy1,
            x0 = 0,
            x1 = ncs_potential_pg$mean[3],
            lwd = lwd_bar,
            lend = "butt",
            col = col_bar)
 
-  arrows(y0 = 1,
+  arrows(y0 = yy1,
          x0 = ncs_potential_pg$lo[3],
          x1 = ncs_potential_pg$hi[3],
          lwd = lwd_ci,
@@ -652,19 +652,19 @@ col_ci <- "grey20"
 
   text("Regrowth potential if seed\ndispersal was not disrupted",
        x = 0,
-       y = 2 + y_lab_diff,
+       y = yy2 + y_lab_diff,
        pos = 2,
        xpd = T,
        cex = cex_ncs)
 
-  segments(y0 = 2,
+  segments(y0 = yy2,
            x0 = 0,
            x1 = ncs_potential_pg$mean[3] + ncs_potential_pg$mean[4],
            lwd = lwd_bar,
            lend = "butt",
            col = col_bar)
 
-  arrows(y0 = 2,
+  arrows(y0 = yy2,
          x0 = ncs_potential_pg$lo[3] + ncs_potential_pg$lo[4],
          x1 = ncs_potential_pg$hi[3] + ncs_potential_pg$hi[4],
          lwd = lwd_ci,
@@ -676,22 +676,21 @@ col_ci <- "grey20"
          xpd = T)
 
 
-  yval_3 <- 3.5
-  text("Carbon accumulation\npotential of biodiversity\nand connectivity restoration",
+  text("Carbon accumulation potential of \nbiodiversity and connectivity restoration",
        x = 0,
-       y = yval_3 + y_lab_diff,
+       y = yy3 + y_lab_diff,
        pos = 2,
        xpd = T,
        cex = cex_ncs)
 
-  segments(y0 = yval_3,
+  segments(y0 = yy3,
            x0 = 0,
            x1 = ncs_potential_pg$mean[4],
            lwd = lwd_bar,
            lend = "butt",
            col = col_bar)
 
-  arrows(y0 = yval_3,
+  arrows(y0 = yy3,
          x0 = ncs_potential_pg$lo[4],
          x1 = ncs_potential_pg$hi[4],
          lwd = lwd_ci,
@@ -707,18 +706,15 @@ col_ci <- "grey20"
   axis(1, at = c(0, 1.5, 3, 4.5) / to_Mg_per_ha,
        labels = c(0, 1.5, 3, 4.5),
        xpd = T,
-       mgp = c(3, -1.75, 0),
-       tck = 0.05)
-  axis(1, at = c(0, 2, 4, 6, 8) * 2 / 3.67 / to_Mg_per_ha,
-       labels = c(0, 2, 4, 6, 8) * 2)
-  text(0, 4.52, "MgC / ha / yr", pos = 2, xpd = T, cex = cex_units)
-  text(0, 5.55, bquote("t"*CO[2]*"e / ha / yr"), pos = 2, xpd = T, cex = cex_units)
-  mtext("Average per-hectare climate\nmitigation potential",
+       mgp = c(3, 0.5, 0),
+       tck = -0.05)
+  text(0, 5.7, "MgC / ha / yr", pos = 2, xpd = T, cex = cex_units)
+  mtext("Average per-hectare climate mitigation potential",
         side = 1,
-        line = 3,
+        line = 2.2,
         font = 2)
 
-dev.off()
+  dev.off()
 
 # par(mar = c(1.1, 11.1, 5.1, 2.1))
 #

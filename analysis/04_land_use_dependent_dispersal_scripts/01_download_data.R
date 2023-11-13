@@ -1,12 +1,14 @@
-
+source(list.files("./R", full.names = T))
 #
-library("tidyverse")
-library("RCurl")
+ipak(c("tidyverse","RCurl"))
 
 # Get movebank metadata
+# This metadata on all data hosted on movebank is available to registered users
+# at https://www.movebank.org/cms/movebank-main
 move_metadata <- read.csv("./data/movebank_metadata.csv", header = T)
 
-# Filter to get species that we can download
+# Filter to get species that we can download. Again, this requires registration
+# and affirming data use policies.
 move_metadata %>% glimpse()
 
 move_metadata <- move_metadata %>% filter(i_have_download_access)
@@ -46,7 +48,7 @@ for(i in sample(study_ids_to_do)){
     paste0(".csv") %>%
     gsub("/", ".", ., fixed = T)
 
-
+  # This shows a lot of cases where the data cannot be used
   if(grepl("homing pigeons", move_filename)) next()
   if(grepl("Homing Pigeons", move_filename)) next()
   if(grepl("Galapagos Tortoise", move_filename)) next()

@@ -19,6 +19,7 @@ c_dat <- all_dat %>%
   left_join(ecoreg_covars %>%
               dplyr::select(coord_id, BIOME_NAME)) %>%
   mutate(ratio = disp_both_eff_le_sum /disp_both_eff_no_le_sum) %>%
+  # The above ratio represents seed dispersal integrity
   filter(stand_age > 0, # Because we're log-transforming, these time = 0 will be removed
         mean_ha > 0)
 

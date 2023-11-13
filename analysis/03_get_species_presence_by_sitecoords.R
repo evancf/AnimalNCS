@@ -1,15 +1,19 @@
 # Want to get bird and mammal species lists at each site.
 # Will do this outside of this code, as it requires IUCN bird and mammal range
-# shapefiles that have access controlled by IUCN.
+# shapefiles that have access controlled by IUCN/BirdLife International
 
 ipak(c("raster", "rgdal", "sf", "tictoc", "beepr"))
 
 
 # Load mammal range data
+# Note that you must change the file path to the location where you have
+# saved the shapefile
 mamm_ranges <- shapefile("~/Dropbox/*Science/*Research/*SESYNC/1 Predicting interactions/Data/distribution/range maps/TERRESTRIAL_MAMMALS/TERRESTRIAL_MAMMALS.shp")
 # This takes about 5 minutes?
 
 # Load bird range data
+# Note that you must change the file path to the location where you have
+# saved the shapefile
 tic()
 bird_ranges <- st_read(dsn = "~/Dropbox/*Science/*Research/*SESYNC/1 Predicting interactions/Data/distribution/range maps/BOTW/BOTW.gdb", layer="All_Species")
 toc()

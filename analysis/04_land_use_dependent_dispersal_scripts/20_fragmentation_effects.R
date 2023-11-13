@@ -5,6 +5,7 @@ ipak(c("tidyverse",
        "sf"))
 
 # Load Timmers et al. data # https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/fee.2485
+# Link to dryad data: https://datadryad.org/stash/dataset/doi:10.5061/dryad.wpzgmsbn9
 timm_dat <- read.csv("./data/land_use_dependent_dispersal_data/fragmentation/masterfile_timmers2021_commas_removed.csv",
                      header = T, sep = ";", fill = T)
 
