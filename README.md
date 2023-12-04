@@ -5,7 +5,7 @@ The goal of this analysis is to understand how disruption of animal-mediated see
 
 
 #### Explanation of scripts
-The following describes the overall goals of each script in the analysis folder, which are intended to be run in their numeric order:
+The following describes the overall goals of each script in the analysis folder, which are intended to be run in their numeric order.
 
 * 01_spatial_data_from_gee.R - This script downloads various spatial data to be used in the analyses. Before executing this script, users need to get set up to use Google Earth Engine in R via the 'rgee' package; see setup notes below. The script gives details on additional data downloads necessary here; these are also summarized in individual "Readme.txt" files within the sub-folders of the "./data/spatial data/" folder.
 * 02_biodiv_data_prep.R - This script pulls together data from Cook-Patton et al. 2019 and Bukoski et al. 2022 on forest carbon accumulation and obtains values for covariates related to forest growth at these sites.
@@ -36,13 +36,13 @@ The following describes the overall goals of each script in the analysis folder,
 #### Additional software setup
 
 ##### Google Earth Engine.
-Several scripts download data from the Earth Engine catalog using the 'rgee' package. Before being able to run these scripts, users will need to have signed up for a Google Earth Engine account and install rgee and its dependencies. Detailed information on getting Earth Engine access can be found here: https://developers.google.com/earth-engine/guides/access. Detailed information on getting set up to use Earth Engine via R using the rgee package is provided here: https://github.com/r-spatial/rgee. Note that this resource outlines further dependencies that need to be installed or set up in order to use the rgee package.
+Several scripts download data from the Earth Engine catalog using the 'rgee' package (v. 1.1.5). Before being able to run these scripts, users will need to have signed up for a Google Earth Engine account and install rgee and its dependencies. Detailed information on getting Earth Engine access can be found here: https://developers.google.com/earth-engine/guides/access. Detailed information on getting set up to use Earth Engine via R using the rgee package is provided here: https://github.com/r-spatial/rgee. Note that this resource outlines further dependencies that need to be installed or set up in order to use the rgee package.
 
 ##### Spatial R packages
-The scripts use R packages including 'sf' and 'terra' for spatial data. If a user has not used these packages before, follow the installation instructions here to install supporting software: https://r-spatial.github.io/sf/.
+The scripts use R packages including 'sf' (v. 1.0-12) and 'terra' (v. 1.7-3) for spatial data. If a user has not used these packages before, follow the installation instructions here to install supporting software: https://r-spatial.github.io/sf/.
 
 ##### JAGS
-For the Bayesian analysis, the scripts use JAGS (Just Another Gibbs Sampler), which needs to be installed before being able to use it via the 'rjags' package in R. Download information can be found here: https://mcmc-jags.sourceforge.io/.
+For the Bayesian analysis, the scripts use JAGS (Just Another Gibbs Sampler, v. 4.3.1), which needs to be installed before being able to use it via the 'rjags' package in R. Download information can be found here: https://mcmc-jags.sourceforge.io/.
 
 
 #### Data notes
@@ -52,6 +52,7 @@ All datasets used in the analyses are publicly available, and the sources are de
 
 #### Computing notes
 
-Most of the analyses were executed on an Apple Macbook Pro M2 Max with 32 GB memory. Comments within the scripts sometimes offer estimates of the time required to execute portions of the scripts, but please note that this will vary depending on the user's computer. Data download speeds are also likely to depend on server load.
+Most of the analyses were executed on an Apple Macbook Pro M2 Max with 32 GB memory running R version 4.2.2. Comments within the scripts sometimes offer estimates of the time required to execute portions of the scripts, but please note that this will vary depending on the user's computer. Data download speeds are also likely to depend on server load.
 
 The most computationally intensive parts of the analysis were executed on a compute cluster, as noted within the scripts. The scripts with the suffix "on_cluster.R" themselves write out multiple R scripts and associated job scripts that can be used to execute pieces of the computation in parallel. Users can run these scripts on a typical university HPC cluster.
+
